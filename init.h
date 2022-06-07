@@ -2,16 +2,23 @@
 #include <sys/types.h>
 #include <limits.h>
 #include <unistd.h>
+#include <termios.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+//headers for auto-completion.
+#include <readline/readline.h>
+#include <readline/history.h>
 
 typedef struct{
     char host[HOST_NAME_MAX];
     char uname[LOGIN_NAME_MAX];
 }user;
 
+/***Low level temrinal manipulation
+struct termios term; 
+***/
 user cur_user;
 
 void init(void);
@@ -36,6 +43,8 @@ void init()
 
     char *home = getenv("HOME"); 
     chdir(home);
+
+    rl_bind_key('\t', rl_complete);
 }
 
 char *get_dir()

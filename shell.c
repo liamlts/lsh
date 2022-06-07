@@ -1,6 +1,5 @@
 #include "init.h"
 
-
 int main(void)
 {
   init();
@@ -46,6 +45,7 @@ int lsh_num_builtins() {
  */
 int lsh_cd(char **args)
 {
+  add_history(args[1]);
   if (args[1] == NULL) {
       fprintf(stderr, "lsh: expected argument to \"cd\"\n");
   } else {
@@ -153,24 +153,12 @@ int lsh_execute(char **args)
  */
 char *lsh_read_line(void)
 {
-#ifdef LSH_USE_STD_GETLINE
-  char *line = NULL;
-  ssize_t bufsize = 0; // have getline allocate a buffer for us
-  if (getline(&line, &bufsize, stdin) == -1) {
-    if (feof(stdin)) {
-      exit(EXIT_SUCCESS);  // We received an EOF
-    } else  {
-      perror("lsh: getline\n");
-      exit(EXIT_FAILURE);
-    }
-  }
-  return line;
-#else
 #define LSH_RL_BUFSIZE 1024
   int bufsize = LSH_RL_BUFSIZE;
   int position = 0;
-  char *buffer = malloc(sizeof(char) * bufsize);
+  char *buffer = (char *)malloc(sizeof(char) * bufsize);
   int c;
+  char *lines;
 
   if (!buffer) {
     fprintf(stderr, "lsh: allocation error\n");
@@ -185,7 +173,9 @@ char *lsh_read_line(void)
       exit(EXIT_SUCCESS);
     } else if (c == '\n') {
       buffer[position] = '\0';
-      return buffer;
+      //BUGS
+      lines = readline((const char *)buffer);
+      return lines;
     } else {
       buffer[position] = c;
     }
@@ -201,11 +191,10 @@ char *lsh_read_line(void)
       }
     }
   }
-#endif
 }
 
 #define LSH_TOK_BUFSIZE 64
-#define LSH_TOK_DELIM " \t\r\n\a"
+#define LSH_TOK_DELIM " \r\n\a"
 
 char **lsh_split_line(char *line)
 {
@@ -247,18 +236,20 @@ void lsh_loop(void)
 {
   char *line;
   char **args;
+  char *uinput;
   int status;
 
   do {
     //printf("> ");
     char *dir = get_dir();
-    printf("[%s@%s]%s>", cur_user.uname, cur_user.host, dir);
-    free(dir);
+    printf("[%s@%s]%s> ", cur_user.uname, cur_user.host, dir);
+
     line = lsh_read_line();
     args = lsh_split_line(line);
     status = lsh_execute(args);
 
     free(line);
     free(args);
+    free(dir);
   } while (status);
 }
