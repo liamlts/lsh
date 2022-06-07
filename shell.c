@@ -47,9 +47,7 @@ int lsh_num_builtins() {
 int lsh_cd(char **args)
 {
   if (args[1] == NULL) {
-      char *home = getenv("HOME");
-      
-    //fprintf(stderr, "lsh: expected argument to \"cd\"\n");
+      fprintf(stderr, "lsh: expected argument to \"cd\"\n");
   } else {
     if (chdir(args[1]) != 0) {
       perror("lsh");
@@ -61,7 +59,7 @@ int lsh_cd(char **args)
 int lsh_cls(char **args)
 {
   const char *cls = "\e[1;1H\e[2J";
-  write(STDOUT_FILENO, cls, 13);
+  write(STDOUT_FILENO, cls, 11);
   return 1;
 }
 
