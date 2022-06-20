@@ -147,60 +147,15 @@ int lsh_execute(char **args)
   return lsh_launch(args);
 }
 
-/**
-   @brief Read a line of input from stdin.
-   @return The line from stdin.
- */
-
-/**char *lsh_read_line(void)
-{
-#define LSH_RL_BUFSIZE 1024
-  int bufsize = LSH_RL_BUFSIZE;
-  int position = 0;
-  char *buffer = (char *)malloc(sizeof(char) * bufsize);
-  int c;
-  char *lines;
-
-  if (!buffer) {
-    fprintf(stderr, "lsh: allocation error\n");
-    exit(EXIT_FAILURE);
-  }
-
-  while (1) {
-    // Read a character
-    c = getchar();
-
-    if (c == EOF) {
-      exit(EXIT_SUCCESS);
-    } else if (c == '\n') {
-      buffer[position] = '\0';
-      //BUGS
-      lines = readline((const char *)buffer);
-      return lines;
-    } else {
-      buffer[position] = c;
-    }
-    position++;
-
-    // If we have exceeded the buffer, reallocate.
-    if (position >= bufsize) {
-      bufsize += LSH_RL_BUFSIZE;
-      buffer = realloc(buffer, bufsize);
-      if (!buffer) {
-        fprintf(stderr, "lsh: allocation error\n");
-        exit(EXIT_FAILURE);
-      }
-    }
-  }
-}
-*/
 //use GNU readline func instead of our own for auto-complete. 
 char *lsh_read_line(void)
 { 
   char *input, prompt[256]; 
-  snprintf(prompt, sizeof(prompt), "[%s@%s]%s> ", cur_user.uname, cur_user.host, get_dir());
+  char *dir = get_dir();
+  snprintf(prompt, sizeof(prompt), "[%s@%s]%s> ", cur_user.uname, cur_user.host, dir);
   input = readline(prompt); 
   add_history(input);
+  free(dir);
   return input;
 }
 
