@@ -1,3 +1,4 @@
+#include <linux/limits.h>
 #include <sys/wait.h>
 #include <sys/types.h>
 #include <limits.h>
@@ -16,7 +17,7 @@ typedef struct{
     char uname[LOGIN_NAME_MAX];
 }user;
 
-/***Low level temrinal manipulation
+/***Low level temrinal manipulation not in use. 
 struct termios term; 
 ***/
 user cur_user;
@@ -42,8 +43,14 @@ void init()
     gethostname(cur_user.host, HOST_NAME_MAX);
     getlogin_r(cur_user.uname, LOGIN_NAME_MAX);
 
-    char *home = getenv("HOME"); 
+    /*char *home = getenv("HOME"); 
     chdir(home);
+    */
+    char *cdir = (char *)malloc(sizeof(char) * PATH_MAX); 
+    if(getcwd(cdir, PATH_MAX) == NULL)
+    {
+        fprintf(stderr, "lsh: error getting working dir.");
+    }
 
     rl_bind_key('\t', rl_complete);
 }
