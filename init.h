@@ -34,7 +34,8 @@ int lsh_exit(char **args);
 int lsh_help(char **args);
 int lsh_cd(char **args);
 int lsh_num_builtins(void);
-char *get_dir();
+char *get_dir(void);
+char *prompt(void);
 
 void init()
 {

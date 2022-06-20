@@ -151,7 +151,8 @@ int lsh_execute(char **args)
    @brief Read a line of input from stdin.
    @return The line from stdin.
  */
-char *lsh_read_line(void)
+
+/**char *lsh_read_line(void)
 {
 #define LSH_RL_BUFSIZE 1024
   int bufsize = LSH_RL_BUFSIZE;
@@ -191,6 +192,16 @@ char *lsh_read_line(void)
       }
     }
   }
+}
+*/
+//use GNU readline func instead of our own for auto-complete. 
+char *lsh_read_line(void)
+{ 
+  char *input, prompt[256]; 
+  snprintf(prompt, sizeof(prompt), "[%s@%s]%s> ", cur_user.uname, cur_user.host, get_dir());
+  input = readline(prompt); 
+  add_history(input);
+  return input;
 }
 
 #define LSH_TOK_BUFSIZE 64
@@ -240,16 +251,11 @@ void lsh_loop(void)
   int status;
 
   do {
-    //printf("> ");
-    char *dir = get_dir();
-    printf("[%s@%s]%s> ", cur_user.uname, cur_user.host, dir);
-
     line = lsh_read_line();
     args = lsh_split_line(line);
     status = lsh_execute(args);
 
     free(line);
     free(args);
-    free(dir);
   } while (status);
 }
