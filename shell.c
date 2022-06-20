@@ -45,11 +45,17 @@ int lsh_num_builtins() {
  */
 int lsh_cd(char **args)
 {
-  add_history(args[1]);
-  if (args[1] == NULL) {
+  if (args[1] == NULL) 
+  {
+    if(chdir(getenv("HOME")) != 0)
+    {
       fprintf(stderr, "lsh: expected argument to \"cd\"\n");
-  } else {
-    if (chdir(args[1]) != 0) {
+    }
+  } 
+  else 
+  {
+    if (chdir(args[1]) != 0) 
+    {
       perror("lsh");
     }
   }
