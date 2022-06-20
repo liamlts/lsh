@@ -4,4 +4,4 @@
 <li>Clear screen command cls.</li>
 <li>Display user and hostname with the current working directory.</li>
 <li>Start in home directory for better UX.</li>
-<li>Auto-complete on tab press.(currenly buggy/breaking whole shell)<i> must press ENTER then input command currently.</i><li>
+<li>Auto-complete on tab press.</li>
