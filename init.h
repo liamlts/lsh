@@ -35,29 +35,17 @@ int lsh_exit(char **args);
 int lsh_help(char **args);
 int lsh_cd(char **args);
 int lsh_num_builtins(void);
-char *get_dir(void);
-char *prompt(void);
 
 void init()
 {
     gethostname(cur_user.host, HOST_NAME_MAX);
     getlogin_r(cur_user.uname, LOGIN_NAME_MAX);
 
-    /*char *home = getenv("HOME"); 
-    chdir(home);
-    */
-    char *cdir = (char *)malloc(sizeof(char) * PATH_MAX); 
+    char cdir[PATH_MAX];
     if(getcwd(cdir, PATH_MAX) == NULL)
     {
-        fprintf(stderr, "lsh: error getting working dir.");
+        fprintf(stderr, "lsh: error getting working dir.\n");
     }
 
     rl_bind_key('\t', rl_complete);
-}
-
-char *get_dir()
-{
-    char *path = (char *)malloc(sizeof(char) * PATH_MAX);
-    getcwd(path, PATH_MAX);
-    return path;
 }

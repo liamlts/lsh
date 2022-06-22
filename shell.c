@@ -2,6 +2,7 @@
 
 int main(void)
 {
+  // Start shell get needed info
   init();
   // Load config files, if any.
 
@@ -49,7 +50,7 @@ int lsh_cd(char **args)
   {
     if(chdir(getenv("HOME")) != 0)
     {
-      fprintf(stderr, "lsh: expected argument to \"cd\"\n");
+      fprintf(stderr, "lsh: Error switching directories\n");
     }
   } 
   else 
@@ -88,7 +89,6 @@ int lsh_help(char **args)
   printf("Use the man command for information on other programs.\n");
   return 1;
 }
-
 
 /**
    @brief Builtin command: exit.
@@ -153,15 +153,21 @@ int lsh_execute(char **args)
   return lsh_launch(args);
 }
 
-//use GNU readline func instead of our own for auto-complete. 
+/**
+   @brief Read line from terminal prompt using GNU Readline. 
+   @return The user input.
+*/
 char *lsh_read_line(void)
 { 
   char *input, prompt[256]; 
-  char *dir = get_dir();
+  char dir[PATH_MAX];
+  if(getcwd(dir, PATH_MAX) == NULL)
+  {
+    fprintf(stderr, "lsh: error getting working dir.");
+  }
   snprintf(prompt, sizeof(prompt), "[%s@%s]%s> ", cur_user.uname, cur_user.host, dir);
   input = readline(prompt); 
   add_history(input);
-  free(dir);
   return input;
 }
 
