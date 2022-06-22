@@ -5,3 +5,8 @@
 <li>Display user and hostname with the current working directory.</li>
 <li>Start in home directory for better UX.</li>
 <li>Auto-complete on tab press.</li>
+<h4>Compiling</h4>
+
+```
+gcc shell.c -lreadline
+```

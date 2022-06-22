@@ -165,7 +165,7 @@ char *lsh_read_line(void)
   {
     fprintf(stderr, "lsh: error getting working dir.");
   }
-  snprintf(prompt, sizeof(prompt), "[%s@%s]%s> ", cur_user.uname, cur_user.host, dir);
+  snprintf(prompt, sizeof(prompt), "\x1b[32m[%s\x1b[36m@\x1b[33m%s]\x1b[37m%s> ", cur_user.uname, cur_user.host, dir);
   input = readline(prompt); 
   add_history(input);
   return input;
