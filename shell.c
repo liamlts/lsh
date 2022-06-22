@@ -107,27 +107,43 @@ int lsh_exit(char **args)
  */
 int lsh_launch(char **args)
 {
-  pid_t pid;
+  pid_t *pid;
   int status;
+  pthread_t th; 
 
-  pid = fork();
-  if (pid == 0) {
+  *pid = fork();
+  if (*pid == 0) {
     // Child process
     if (execvp(args[0], args) == -1) {
       perror("lsh");
     }
     exit(EXIT_FAILURE);
-  } else if (pid < 0) {
+  } else if (*pid < 0) {
     // Error forking
     perror("lsh");
   } else {
     // Parent process
-    do {
-      waitpid(pid, &status, WUNTRACED);
-    } while (!WIFEXITED(status) && !WIFSIGNALED(status));
+    if(pthread_create(&th, NULL, t_exec, pid) != 0)
+    {
+      fprintf(stderr, "lsh: Threading error.\n");
+    }
+    
+    if(pthread_join(th, (void **)pid) != 0)
+    {
+      fprintf(stderr, "lsh: Threading error.\n");
+    }
   }
-
   return 1;
+}
+
+void *t_exec(void *p)
+{
+  pid_t *proc = (pid_t *)p; 
+  int status;
+  do {
+    waitpid(*proc, &status, WUNTRACED);
+  } while (!WIFEXITED(status) && !WIFSIGNALED(status));
+  pthread_exit(&proc);
 }
 
 /**

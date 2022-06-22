@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <pthread.h>
 #include <unistd.h>
 //headers for auto-completion.
 #include <readline/readline.h>
@@ -35,6 +36,7 @@ int lsh_exit(char **args);
 int lsh_help(char **args);
 int lsh_cd(char **args);
 int lsh_num_builtins(void);
+void *t_exec(void *p); 
 
 void init()
 {
