@@ -10,4 +10,4 @@
 ```
 gcc shell.c -lreadline
 ```
-<i>Currently built and tested on Arch Linux running DWM.</i>
+<i>Currently built and tested on Arch Linux running DWM and ST.</i>
