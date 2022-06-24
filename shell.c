@@ -78,7 +78,7 @@ int lsh_cls(char **args)
 int lsh_help(char **args)
 {
   int i;
-  printf("Liams's LSH, forked from Stephen Brennan.\n");
+  printf("Liams' LSH, forked from Stephen Brennan.\n");
   printf("Type program names and arguments, and hit enter.\n");
   printf("The following are built in:\n");
 
@@ -136,6 +136,11 @@ int lsh_launch(char **args)
   return 1;
 }
 
+/**
+  @brief Wait for seperate program to terminate in separate thread.
+  @param args Process ID. 
+  @return process ID back to caller once finshed.
+ */
 void *t_exec(void *p)
 {
   pid_t *proc = (pid_t *)p; 
@@ -143,7 +148,7 @@ void *t_exec(void *p)
   do {
     waitpid(*proc, &status, WUNTRACED);
   } while (!WIFEXITED(status) && !WIFSIGNALED(status));
-  pthread_exit(&proc);
+  pthread_exit(proc);
 }
 
 /**
@@ -173,7 +178,7 @@ int lsh_execute(char **args)
    @brief Read line from terminal prompt using GNU Readline. 
    @return The user input.
 */
-char *lsh_read_line(void)
+char *lsh_read_line()
 { 
   char *input, prompt[256]; 
   char dir[PATH_MAX];
@@ -230,7 +235,6 @@ void lsh_loop(void)
 {
   char *line;
   char **args;
-  char *uinput;
   int status;
 
   do {
