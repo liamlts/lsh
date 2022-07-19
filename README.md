@@ -1,5 +1,5 @@
 # lsh
-<h3><a href="https://github.com/brenns10/lsh"> Orignal Source</a></h3>
+<h3>This project is a fork of <a href="https://github.com/brenns10/lsh"> LSH</a></h3>
 <h3>My Additions</h3>
 <li>Clear screen command cls.</li>
 <li>Improved look of shell prompt: <b>[user@hostname]/home/user</b></li>
